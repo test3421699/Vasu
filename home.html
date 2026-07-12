@@ -38,8 +38,15 @@
     </div>
 
     <div class="account-info">
-      <span class="account-greeting">Hi, {{ user.username }}</span>
-      <a href="#" class="logout-btn">Logout</a>
+      {% if user.is_authenticated %}
+        <span class="account-greeting" style="margin-right: 8px;">Hi, {{ user.username }}</span>
+        <form method="post" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn-secondary" style="height: 38px; padding: 0 16px; font-size: 0.85rem; border-radius: var(--radius-sm); display: inline-flex; align-items: center; text-decoration: none;">Login</a>
+      {% endif %}
     </div>
   </div>
 </nav>
@@ -81,7 +88,7 @@
                             </div>
                         </div>
                         <div class="file-action">
-                            <a href="{% url 'download' file.id %}" class="btn btn-secondary btn-view">View File</a>
+                            <a href="{% url 'download_page' file.id %}" class="btn btn-secondary btn-view">View File</a>
                         </div>
                     </div>
                     {% endfor %}
