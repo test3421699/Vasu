@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CloudFile</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'CloudFile/style.css' %}">
+</head>
+<body>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div class="logo-container">
+    <a href="#" class="logo">CloudFile</a>
+  </div>
+  
+  <button class="menu-toggle" id="mobile-toggle" aria-label="Toggle Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="nav-menu" id="nav-menu">
+    <div class="nav-links">
+      <a href="#" class="active">Home</a>
+      <a href="#">Dashboard</a>
+      <a href="#">Settings</a>
+    </div>
+
+    <div class="account-info">
+      <span class="account-greeting">Hi, {{ user.username }}</span>
+      <a href="#" class="logout-btn">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+    <h1>Manage Your Files <span>Secured in Cloud</span></h1>
+    <p>Upload, manage, and share your important files dynamically across all devices.</p>
+    <div class="hero-actions">
+        <a href="{% url 'upload' %}" class="btn">
+            Upload New File
+        </a>
+    </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="main-wrapper">
+    <div class="dashboard-grid">
+        
+        <!-- Left Column: Files -->
+        <section class="card">
+            <h2>Your Files</h2>
+            <div class="activity-list">
+                {% if files %}
+                    {% for file in files %}
+                    <div class="activity-item">
+                        <div class="file-info">
+                            <span class="file-name">{{ file.file.name }}</span>
+                            <div class="file-meta">
+                                <span>Uploaded {{ file.uploaded_at|timesince }} ago</span>
+                                {% if file.expires_at %}
+                                    {% if file.is_expired %}
+                                        <span class="badge badge-expired">Expired</span>
+                                    {% else %}
+                                        <span class="badge badge-active">Expires: {{ file.expires_at }}</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge badge-none">No expiry</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="file-action">
+                            <a href="{% url 'download' file.id %}" class="btn btn-view">View File</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="text-align: center; padding: 40px 0;">
+                        <p style="color: var(--text-secondary); margin-bottom: 20px;">No files uploaded yet.</p>
+                        <a href="{% url 'upload' %}" class="btn btn-secondary">Upload Now</a>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Right Column: Sidebar News -->
+        <aside class="card">
+            <h2>CloudFile News</h2>
+            <div class="news-list">
+                <div class="news-item">
+                    <h3>🚀 New Dashboard</h3>
+                    <p>Enjoy a cleaner, premium, glassmorphic layout optimized for fluid workflows.</p>
+                </div>
+                <div class="news-item">
+                    <h3>🔒 Security Upgrade</h3>
+                    <p>Enhanced modern system security patterns safeguard your sensitive data storage.</p>
+                </div>
+                <div class="news-item">
+                    <h3>✨ Coming Soon</h3>
+                    <p>Collaborative features, team shares, and advanced download insights dashboard.</p>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+</main>
+
+<footer>
+    &copy; 2026 CloudFile. All rights reserved.
+</footer>
+
+<script>
+    // Mobile responsive menu toggle logic
+    const toggle = document.getElementById('mobile-toggle');
+    const menu = document.getElementById('nav-menu');
+    toggle.addEventListener('click', () => {
+        menu.classList.toggle('open');
+        toggle.classList.toggle('active');
+    });
+</script>
+</body>
+</html>
